@@ -1,2 +1,2 @@
 # ROCm-Installer
-AMDgpu-dkms / ROCm Installer for Debian
+AMDgpu-dkms / ROCm Installer for Entropy Linux [Debian]
