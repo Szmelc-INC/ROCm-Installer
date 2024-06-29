@@ -12,9 +12,9 @@
 # List of URLs for .deb dependencies
 DEB_URLS=(
     "http://security.ubuntu.com/ubuntu/pool/main/p/python3.10/libpython3.10_3.10.12-1~22.04.3_amd64.deb"
-	"http://security.ubuntu.com/ubuntu/pool/main/p/python3.10/libpython3.10-stdlib_3.10.12-1~22.04.3_amd64.deb"
-	"http://de.archive.ubuntu.com/ubuntu/pool/main/m/mpdecimal/libmpdec3_2.5.1-2build2_amd64.deb"
-	"http://security.ubuntu.com/ubuntu/pool/main/p/python3.10/libpython3.10-minimal_3.10.12-1~22.04.3_amd64.deb"
+    "http://security.ubuntu.com/ubuntu/pool/main/p/python3.10/libpython3.10-stdlib_3.10.12-1~22.04.3_amd64.deb"
+    "http://de.archive.ubuntu.com/ubuntu/pool/main/m/mpdecimal/libmpdec3_2.5.1-2build2_amd64.deb"
+    "http://security.ubuntu.com/ubuntu/pool/main/p/python3.10/libpython3.10-minimal_3.10.12-1~22.04.3_amd64.deb"
 )
 
 clear && cat <<EOF
@@ -54,7 +54,7 @@ sudo -v
 
 # Check for free space on root partition
 REQUIRED_SPACE_GB=30
-AVAILABLE_SPACE_GB=$(df / --output=avail | tail -n1 | awk '{print int($1/1024/1024)}')
+AVAILABLE_SPACE_GB=$(df / --output=avail / | tail -n1 | awk '{print int($1/1024/1024)}')
 
 if [[ $AVAILABLE_SPACE_GB -lt $REQUIRED_SPACE_GB ]]; then
     echo "Error: Not enough free space on root partition. Please free up some space."
@@ -139,10 +139,31 @@ sudo dpkg -i *.deb
 echo "Installing amdgpu-dkms and ROCm"
 sudo apt install -y amdgpu-dkms rocm
 
+# Optional: Install PyTorch
+read -p "Install PyTorch as well? (Another 5GB Required) [Y/n] " pytorch_response
+pytorch_response=${pytorch_response,,} # tolower
+if [[ "$pytorch_response" != "n" ]]; then
+    REQUIRED_SPACE_GB=5
+    AVAILABLE_SPACE_GB=$(df / --output=avail / | tail -n1 | awk '{print int($1/1024/1024)}')
+    if [[ $AVAILABLE_SPACE_GB -lt $REQUIRED_SPACE_GB ]]; then
+        echo "Error: Not enough free space on root partition for PyTorch. Please free up some space."
+        echo "Required: ${REQUIRED_SPACE_GB}GB, Available: ${AVAILABLE_SPACE_GB}GB"
+        exit 1
+    else
+        echo "Installing PyTorch"
+        pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0
+    fi
+fi
+
 # Initialize modules
 echo "Initializing modules"
 sudo modprobe amdgpu
+
+# Verify installation
+echo "==========================="
 rocm-smi --version
+python3 -c "import torch; print(torch.__version__)"
+echo "==========================="
 
 # Clean & Reboot when complete
 echo "Cleaning up and rebooting"
