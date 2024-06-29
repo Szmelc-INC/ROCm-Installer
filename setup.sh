@@ -140,7 +140,8 @@ echo "Installing amdgpu-dkms and ROCm"
 sudo apt install -y amdgpu-dkms rocm
 
 # Optional: Install PyTorch
-read -p "Install PyTorch as well? (Another 5GB Required) [Y/n] " pytorch_response
+echo "Install PyTorch as well? (Another 5GB Required) [Y/n] "
+read -t 30 -p "Install PyTorch as well? (Another 5GB Required) [Y/n] " pytorch_response || pytorch_response="y"
 pytorch_response=${pytorch_response,,} # tolower
 if [[ "$pytorch_response" != "n" ]]; then
     REQUIRED_SPACE_GB=5
