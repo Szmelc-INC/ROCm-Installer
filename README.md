@@ -1,5 +1,7 @@
 # ROCm-Installer
-AMDgpu-dkms / ROCm Installer for Entropy Linux [Debian]
+> AMDgpu-dkms / ROCm Installer for Entropy Linux [Debian]
+
+<img src="https://github.com/GNU-Szmelc/ROCm-Installer/assets/95081005/a6da4223-7ed2-423b-bd42-483fb6d1adaa" alt="Image" width="500" />
 
 ### Usage
 > Run this command in bash to start installer
