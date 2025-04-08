@@ -11,7 +11,7 @@ chmod +x setup.sh && ./setup.sh
 ```
 
 ### To-Do
-- Adopt it to Entropy's PostInstall Manager
+- ~~Adopt it to Entropy's PostInstall Manager~~
 - Add platform detection / use appropriate commands for other distros
 - Add CUDA Installer and package both into GPU Driver Manager
 - Track versions & update main branch when new packages are out
